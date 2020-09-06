@@ -1,0 +1,27 @@
+{
+  "name": "noda20vb",
+  "version": "0.0.1",
+  "description": "education node_js",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/victorbtgn/noda.git"
+  },
+  "author": "VicThor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/victorbtgn/noda/issues"
+  },
+  "homepage": "https://github.com/victorbtgn/noda#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "yargs": "^15.4.1"
+  }
+}
