@@ -1,12 +1,6 @@
 const contacts = require("./contacts");
 const argv = require("yargs").argv;
 
-// contacts.listContacts();
-
-// contacts.getContactById(5);
-
-// contacts.removeContact(11);
-
 // contacts.addContact("Dart Vader", "darkside@mail.com", "(715) 845-7856");
 
 // contacts.addContact("John Kirk", "navy@mail.com", "(715) 852-8513");

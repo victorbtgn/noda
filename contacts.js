@@ -1,14 +1,18 @@
 const fs = require("fs");
 const path = require("path");
 
+// import { readFile, writeFile } from "fs";
+// import { resolve } from "path";
+
 const contactsPath = path.resolve(__dirname, "db", "contacts.json");
 
 function listContacts() {
   fs.readFile(contactsPath, (err, data) => {
     if (err) return err;
 
-    console.table(JSON.parse(data));
-    return JSON.parse(data);
+    const contactsList = JSON.parse(data);
+    console.table(contactsList);
+    return contactsList;
   });
 }
 
@@ -16,8 +20,9 @@ function getContactById(contactId) {
   fs.readFile(contactsPath, (err, data) => {
     if (err) return err;
 
-    console.table(JSON.parse(data).find((contact) => contact.id === contactId));
-    return JSON.parse(data).find((contact) => contact.id === contactId);
+    const contact = JSON.parse(data).find((contact) => contact.id === contactId);
+    console.table(contact);
+    return contact;
   });
 }
 
@@ -25,15 +30,9 @@ function removeContact(contactId) {
   fs.readFile(contactsPath, (err, data) => {
     if (err) return;
 
-    const newContactsList = JSON.parse(data).filter(
-      (contact) => contact.id !== contactId
-    );
+    const newContactsList = JSON.parse(data).filter((contact) => contact.id !== contactId);
 
-    return fs.writeFile(
-      contactsPath,
-      JSON.stringify(newContactsList),
-      (err) => err
-    );
+    return fs.writeFile(contactsPath, JSON.stringify(newContactsList), (err) => err);
   });
 }
 
@@ -52,7 +51,7 @@ function addContact(name, email, phone) {
 
     contacts.push(newContact);
 
-    return fs.writeFileSync(contactsPath, JSON.stringify(contacts));
+    return fs.writeFile(contactsPath, JSON.stringify(contacts), (err) => err);
   });
 }
 
