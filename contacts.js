@@ -35,9 +35,25 @@ async function removeContact(contactId) {
   return fs.writeFile(contactsPath, JSON.stringify(newContactsList));
 }
 
+async function updateContact(id, body) {
+  const oldContact = await getContactById(id);
+  const updatedContact = { ...oldContact, ...body };
+
+  const contactsList = await listContacts();
+  const newContactsList = contactsList.map((contact) => {
+    if (contact.id === id) return updatedContact;
+    return contact;
+  });
+
+  fs.writeFile(contactsPath, JSON.stringify(newContactsList));
+
+  return updatedContact;
+}
+
 module.exports = {
   listContacts,
   getContactById,
   addContact,
   removeContact,
+  updateContact,
 };
