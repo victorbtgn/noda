@@ -25,7 +25,7 @@ async function addContact(name, email, phone) {
     phone,
   };
   contactsList.push(newContact);
-  fs.writeFile(contactsPath, JSON.stringify(contactsList));
+  await fs.writeFile(contactsPath, JSON.stringify(contactsList));
   return newContact;
 }
 
@@ -45,7 +45,7 @@ async function updateContact(id, body) {
     return contact;
   });
 
-  fs.writeFile(contactsPath, JSON.stringify(newContactsList));
+  await fs.writeFile(contactsPath, JSON.stringify(newContactsList));
 
   return updatedContact;
 }
