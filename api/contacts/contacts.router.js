@@ -1,22 +1,22 @@
 const { Router } = require("express");
 const { listContacts, getContactById, removeContact, addContact, updateContact } = require("../../contacts");
 
+const { getContactsController, getContactByIdController } = require("./contacts.controller");
+
 const contactsRouter = Router();
 
-contactsRouter.get("/", async (req, res) => {
-  const contacts = await listContacts();
-  res.status(200).json(contacts);
-  return;
-});
+contactsRouter.get("/", getContactsController);
 
-contactsRouter.get("/:contactId", async (req, res) => {
-  const id = Number(req.params.contactId);
-  const contact = await getContactById(id);
-  if (!contact) return res.status(404).json({ message: "Not found" });
+// contactsRouter.get("/:contactId", async (req, res) => {
+//   const id = Number(req.params.contactId);
+//   const contact = await getContactById(id);
+//   if (!contact) return res.status(404).json({ message: "Not found" });
 
-  res.status(200).json(contact);
-  return;
-});
+//   res.status(200).json(contact);
+//   return;
+// });
+
+contactsRouter.get("/:contactId", getContactByIdController);
 
 contactsRouter.post("/", async (req, res) => {
   const { name, email, phone } = req.body;
