@@ -36,8 +36,8 @@ const contactSchema = new Schema({
 
 let db = model("Contact", contactSchema);
 
-async function getContacts() {
-  return await db.find();
+async function getContacts(query) {
+  return await db.find(query);
 }
 
 async function getContactsById(contactId) {
