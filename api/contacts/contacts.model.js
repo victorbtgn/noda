@@ -19,6 +19,19 @@ const contactSchema = new Schema({
     default: "phone number",
     unique: true,
   },
+  subscription: {
+    type: String,
+    default: "free",
+  },
+  password: {
+    type: String,
+    required: true,
+    min: 8,
+  },
+  token: {
+    type: String,
+    default: "",
+  },
 });
 
 let db = model("Contact", contactSchema);
@@ -31,4 +44,16 @@ async function getContactsById(contactId) {
   return await db.findById(contactId);
 }
 
-module.exports = { getContacts, getContactsById };
+async function createContact(contact) {
+  return await db.create(contact);
+}
+
+async function removeContact(contactId) {
+  return await db.findByIdAndRemove(contactId);
+}
+
+async function updateContact(contactId, contactData) {
+  return await db.findByIdAndUpdate(contactId, contactData, { new: true });
+}
+
+module.exports = { getContacts, getContactsById, createContact, removeContact, updateContact };

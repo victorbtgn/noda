@@ -40,7 +40,7 @@ const runServer = async () => {
 
     app.listen(PORT, () => console.log(`Server started on port: ${PORT}`));
   } catch (error) {
-    //  Send this error on some new logs file?
+    //  Send this error on some new logs file? or error.logs.js
     console.log("Database connection error(");
     process.exit(1);
   }
