@@ -18,6 +18,28 @@ const getCurrentUserController = async (req, res, next) => {
   }
 };
 
+const updateUserController = async (req, res, next) => {
+  try {
+    const {
+      body: { subscription },
+    } = req;
+    const user = await User.findUserById(req.user._id);
+    if (!user) {
+      res.status(401).json({ message: "Not authorized" });
+      return;
+    }
+    // await User.findUserAndUpdate({ _id: user._id }, req.body);
+    if (subscription !== "free" && subscription !== "pro" && subscription !== "premium") {
+      res.status(400).json({ message: "mast be on of: 'free', 'pro', 'premium'" });
+      return;
+    }
+    await User.findUserAndUpdate({ _id: user._id }, { subscription });
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
+
 const registerUserController = async (req, res, next) => {
   try {
     const { body } = req;
@@ -89,4 +111,10 @@ const logoutUserController = async (req, res, next) => {
   }
 };
 
-module.exports = { getCurrentUserController, registerUserController, loginUserController, logoutUserController };
+module.exports = {
+  getCurrentUserController,
+  updateUserController,
+  registerUserController,
+  loginUserController,
+  logoutUserController,
+};

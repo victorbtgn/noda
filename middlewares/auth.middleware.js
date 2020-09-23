@@ -3,7 +3,7 @@ const { verifyToken } = require("../services/token.service");
 
 const checkAuthTokenMiddleware = async (req, res, next) => {
   try {
-    const token = req.get("Authorization");
+    const token = req.get("Authorization").replace("Bearer ", "");
     if (!token) {
       res.status(401).json({ message: "Not authorized" });
       return;

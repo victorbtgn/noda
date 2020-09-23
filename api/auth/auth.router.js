@@ -2,6 +2,7 @@ const { Router } = require("express");
 const { checkAuthTokenMiddleware } = require("../../middlewares/auth.middleware");
 const {
   getCurrentUserController,
+  updateUserController,
   registerUserController,
   loginUserController,
   logoutUserController,
@@ -10,6 +11,8 @@ const {
 const authRouter = Router();
 
 authRouter.get("/current", checkAuthTokenMiddleware, getCurrentUserController);
+
+authRouter.post("/users", checkAuthTokenMiddleware, updateUserController);
 
 authRouter.post("/register", registerUserController);
 
