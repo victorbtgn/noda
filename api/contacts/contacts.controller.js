@@ -2,10 +2,18 @@ const contactsDB = require("./contacts.model");
 
 const getContactsController = async (req, res, next) => {
   try {
-    const { query } = req;
-    const contacts = await contactsDB.getContacts(query);
+    const { page, limit, ...query } = req.query;
+    const opt = {
+      page: +page || 1,
+      limit: +limit || 20,
+    };
+    const contacts = await contactsDB.db.paginate(query, opt, async function (err, result) {
+      if (err) return;
+      return result.docs;
+    });
     res.json(contacts);
   } catch (error) {
+    console.log("err: ", error);
     next(error);
   }
 };

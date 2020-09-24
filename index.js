@@ -9,6 +9,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 
+const authRouter = require("./api/auth/auth.router");
 const contactsRouter = require("./api/contacts/contacts.router");
 
 const runServer = async () => {
@@ -21,6 +22,7 @@ const runServer = async () => {
     app.use(cors());
     app.use(express.json());
 
+    app.use("/auth", authRouter);
     app.use("/api/contacts", contactsRouter);
 
     app.use(async (err, req, res, next) => {

@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const contactSchema = new Schema({
   name: {
@@ -34,11 +35,9 @@ const contactSchema = new Schema({
   },
 });
 
-let db = model("Contact", contactSchema);
+contactSchema.plugin(mongoosePaginate);
 
-async function getContacts(query) {
-  return await db.find(query);
-}
+let db = model("Contact", contactSchema);
 
 async function getContactsById(contactId) {
   return await db.findById(contactId);
@@ -56,4 +55,4 @@ async function updateContact(contactId, contactData) {
   return await db.findByIdAndUpdate(contactId, contactData, { new: true });
 }
 
-module.exports = { getContacts, getContactsById, createContact, removeContact, updateContact };
+module.exports = { db, getContactsById, createContact, removeContact, updateContact };
