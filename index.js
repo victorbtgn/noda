@@ -1,10 +1,11 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 
-const fs = require("fs");
+const path = require("path");
 const express = require("express");
+const fs = require("fs").promises;
 const cors = require("cors");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
@@ -22,6 +23,8 @@ const runServer = async () => {
     app.use(cors());
     app.use(express.json());
 
+    app.use(express.static(path.resolve(__dirname, "public")));
+
     app.use("/auth", authRouter);
     app.use("/api/contacts", contactsRouter);
 
@@ -37,6 +40,7 @@ const runServer = async () => {
         });
         logs = JSON.stringify(logs);
         await fs.writeFile("errors.logs.json", logs);
+        res.status(500).send(err.message);
       }
     });
 

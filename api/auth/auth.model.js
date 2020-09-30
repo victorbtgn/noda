@@ -4,22 +4,17 @@ const userSchema = new Schema({
   email: {
     type: String,
     unique: true,
-    required: true,
-    validate: (value) => value.includes("@"),
   },
-  password: {
-    type: String,
-    required: true,
-    min: 8,
-  },
+  password: String,
   subscription: {
     type: String,
     enum: ["free", "pro", "premium"],
     default: "free",
   },
-  token: {
+  token: String,
+  avatarURL: {
     type: String,
-    default: "",
+    // default: "http://localhost:8000/images/default-avatar.jpg",
   },
 });
 
@@ -38,7 +33,7 @@ async function findUserById(id) {
 }
 
 async function findUserAndUpdate(query, update) {
-  return await db.findOneAndUpdate(query, update);
+  return await db.findOneAndUpdate(query, update, { new: true });
 }
 
 module.exports = { registerUser, findUser, findUserById, findUserAndUpdate };

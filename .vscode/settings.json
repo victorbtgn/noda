@@ -3,6 +3,8 @@
         "byadmin",
         "exampletoken",
         "mongodb",
-        "noda"
-    ]
+        "noda",
+        "uploader"
+    ],
+    "debug.javascript.warnOnLongPrediction": false
 }
