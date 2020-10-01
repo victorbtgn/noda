@@ -33,7 +33,7 @@ async function findUserById(id) {
 }
 
 async function findUserAndUpdate(query, update) {
-  return await db.findOneAndUpdate(query, update, { new: true });
+  return await db.findOneAndUpdate(query, update, { new: true, runValidators: true });
 }
 
 module.exports = { registerUser, findUser, findUserById, findUserAndUpdate };

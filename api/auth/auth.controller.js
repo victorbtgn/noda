@@ -20,22 +20,16 @@ const getCurrentUserController = async (req, res, next) => {
 
 const updateUserController = async (req, res, next) => {
   try {
-    const {
-      body: { subscription },
-    } = req;
     const user = await User.findUserById(req.user._id);
     if (!user) {
       res.status(401).json({ message: "Not authorized" });
       return;
     }
-    // await User.findUserAndUpdate({ _id: user._id }, req.body);
-    if (subscription !== "free" && subscription !== "pro" && subscription !== "premium") {
-      res.status(400).json({ message: "mast be on of: 'free', 'pro', 'premium'" });
-      return;
-    }
-    await User.findUserAndUpdate({ _id: user._id }, { subscription });
+    await User.findUserAndUpdate({ _id: user._id }, req.body);
     res.status(204).end();
   } catch (error) {
+    if (error._message) res.status(400).json({ message: "invalid fields" });
+
     next(error);
   }
 };
@@ -122,7 +116,9 @@ const uploadAvatarController = async (req, res, next) => {
   try {
     const user = await User.findUserById(req.user._id);
     const oldUserAvatarName = await user.avatarURL.split("/")[4];
-    await fs.unlink(`public/images/${oldUserAvatarName}`);
+    if (oldUserAvatarName) {
+      await fs.unlink(`public/images/${oldUserAvatarName}`);
+    }
     const updateAvatar = await minifyAvatar();
     const updateUser = await User.findUserAndUpdate({ _id: req.user._id }, { avatarURL: updateAvatar });
     res.json({ avatarURL: updateUser.avatarURL });

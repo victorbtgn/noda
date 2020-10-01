@@ -2,6 +2,7 @@ const fs = require("fs").promises;
 
 const Avatar = require("avatar-builder");
 const imagemin = require("imagemin");
+const imageminJpegtran = require("imagemin-jpegtran");
 
 const createDefaultAvatar = async (userId) => {
   await Avatar.builder(Avatar.Image.circleMask(Avatar.Image.identicon()), 80, 80, {
@@ -15,6 +16,7 @@ const minifyAvatar = async () => {
   try {
     const file = await imagemin(["./tmp/"], {
       destination: "public/images",
+      plugins: [imageminJpegtran()],
     });
 
     await fs.unlink(file[0].sourcePath);
