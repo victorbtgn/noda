@@ -6,5 +6,8 @@
         "noda",
         "uploader"
     ],
-    "debug.javascript.warnOnLongPrediction": false
+    "debug.javascript.warnOnLongPrediction": false,
+    "cSpell.words": [
+        "jpegtran"
+    ]
 }
