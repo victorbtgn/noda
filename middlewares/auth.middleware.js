@@ -5,7 +5,7 @@ const checkAuthTokenMiddleware = async (req, res, next) => {
   try {
     const token = req.get("Authorization");
     if (!token) {
-      res.status(401).json({ message: "Not authorized" });
+      throw res.status(401).json({ message: "Not authorized" });
       return;
     }
     const { id } = await verifyToken(token);

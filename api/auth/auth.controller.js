@@ -44,7 +44,7 @@ const registerUserController = async (req, res, next) => {
       password: hashedPassword,
     });
 
-    if (!user) return res.status(500).json({ message: "Internal Server Error" });
+    if (!user) return res.status(404).json({ message: "user not found" });
 
     const avatarURL = await createDefaultAvatar(user._id);
 
