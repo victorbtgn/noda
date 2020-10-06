@@ -14,39 +14,49 @@ it("Connection mongo test with valid URI", (done) => {
   });
 });
 
-// const reqHeader = {
-//   // headers: {
-//   //   authorization:
-//   //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNzRlYmQ5MGMwOGIzMzU5ODlkNzVjOCIsImlhdCI6MTYwMTY1NDAyMH0.bSaMyhIWYzjnx8aVIIDh8QwGLxY-UhmR4pjUT_nmang",
-//   // },
-//   get: (string) =>
-//     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNzRlYmQ5MGMwOGIzMzU5ODlkNzVjOCIsImlhdCI6MTYwMTY1NDAyMH0.bSaMyhIWYzjnx8aVIIDh8QwGLxY-UhmR4pjUT_nmang",
-// };
+const validToken = {
+  get: () =>
+    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNzRlYmQ5MGMwOGIzMzU5ODlkNzVjOCIsImlhdCI6MTYwMTY1NDAyMH0.bSaMyhIWYzjnx8aVIIDh8QwGLxY-UhmR4pjUT_nmang",
+};
 
-// it("Check auth middleware with valid token", (done) => {
-//   const fakeReq = mockReq(reqHeader);
-//   const fakeRes = mockRes();
-//   const fakeNext = sinon.stub();
+it("Check auth middleware with valid token", (done) => {
+  const fakeReq = mockReq(validToken);
+  const fakeRes = mockRes();
 
-//   checkAuthTokenMiddleware(fakeReq, fakeRes, fakeNext)
-//     .then((req) => {
-//       done();
-//     })
-//     .catch((err) => done(err));
-// });
+  checkAuthTokenMiddleware(fakeReq, fakeRes, (err, req) => {
+    if (err) return done(err);
+    done();
+  });
+});
+
+const invalidToken = {
+  get: () =>
+    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNzRlYmQ5MGMwOGIzMzU5ODlkNzVjOCIsImlhdCI6MTYwMTY1NDAyMH0.bSaMyhIWYzjnx8aVIIDh8QwGLxY-UhmR4pjUT_nmanG",
+};
+
+it("Check auth middleware with invalid token", (done) => {
+  const fakeReq = mockReq(invalidToken);
+  const fakeRes = mockRes();
+
+  checkAuthTokenMiddleware(fakeReq, fakeRes, (err) => {
+    if (err) return done();
+    done(new Error("must be invalid token"));
+  });
+});
+
+const nonToken = {
+  get: () => "",
+};
 
 // it("Check auth middleware without token", (done) => {
-//   const fakeReq = mockReq();
+//   const fakeReq = mockReq(nonToken);
 //   const fakeRes = mockRes();
-//   const fakeNext = sinon.stub();
 
-//   checkAuthTokenMiddleware(fakeReq, fakeRes, fakeNext)
-//     .then((req) => {
-//       console.log("REQ: ", req);
-//       if (req) return done(req);
-//       done();
-//     })
-//     .catch((err) => done(err));
+//   checkAuthTokenMiddleware(fakeReq, fakeRes, (err) => {
+//     console.log("ERR: ", err);
+//     if (err) return done();
+//     done(new Error("must be empty token"));
+//   });
 // });
 
 // ======================================
