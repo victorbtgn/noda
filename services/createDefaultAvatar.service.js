@@ -3,10 +3,11 @@ const fs = require("fs").promises;
 const Avatar = require("avatar-builder");
 const imagemin = require("imagemin");
 const imageminJpegtran = require("imagemin-jpegtran");
+const { imagesStore, temporaryDirectory, staticAvatarURL } = require("../config");
 
 const createDefaultAvatar = async (userId) => {
   await Avatar.builder(Avatar.Image.circleMask(Avatar.Image.identicon()), 80, 80, {
-    cache: Avatar.Cache.folder("./tmp"),
+    cache: Avatar.Cache.folder(temporaryDirectory()),
   }).create(userId);
 
   return await minifyAvatar();
@@ -14,8 +15,8 @@ const createDefaultAvatar = async (userId) => {
 
 const minifyAvatar = async () => {
   try {
-    const file = await imagemin(["./tmp/"], {
-      destination: "public/images",
+    const file = await imagemin([temporaryDirectory()], {
+      destination: imagesStore(),
       plugins: [imageminJpegtran()],
     });
 
@@ -23,9 +24,9 @@ const minifyAvatar = async () => {
 
     const destinationPath = await file[0].destinationPath.split("\\")[2];
 
-    return `http://localhost:8000/images/${destinationPath}`;
+    return staticAvatarURL(destinationPath);
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 

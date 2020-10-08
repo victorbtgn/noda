@@ -4,6 +4,8 @@ const fs = require("fs").promises;
 const { createVerifyToken } = require("../../services/token.service");
 const { createDefaultAvatar, minifyAvatar } = require("../../services/createDefaultAvatar.service");
 
+const { imagesStore } = require("../../config");
+
 const getCurrentUserController = async (req, res, next) => {
   try {
     const user = await User.findUserById(req.user._id);
@@ -117,7 +119,7 @@ const uploadAvatarController = async (req, res, next) => {
     const user = await User.findUserById(req.user._id);
     const oldUserAvatarName = await user.avatarURL.split("/")[4];
     if (oldUserAvatarName) {
-      await fs.unlink(`public/images/${oldUserAvatarName}`);
+      await fs.unlink(imagesStore(oldUserAvatarName));
     }
     const updateAvatar = await minifyAvatar();
     const updateUser = await User.findUserAndUpdate({ _id: req.user._id }, { avatarURL: updateAvatar });

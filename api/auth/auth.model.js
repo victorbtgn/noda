@@ -12,10 +12,7 @@ const userSchema = new Schema({
     default: "free",
   },
   token: String,
-  avatarURL: {
-    type: String,
-    // default: "http://localhost:8000/images/default-avatar.jpg",
-  },
+  avatarURL: String,
 });
 
 let db = model("user", userSchema);
