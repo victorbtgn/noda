@@ -36,45 +36,47 @@ const argForMiddleware = () => {
 const validToken = () =>
   "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNzRiNTE1ZTQ4ODRkMmM1NDcwMzA3NyIsImlhdCI6MTYwMTQ4NDEyOX0.YK-fzBeDVHckGo7NzuQTRxD1_9A2qjBViZqzabGqTlk";
 
-it("Check auth middleware with valid token", async (done) => {
-  try {
-    const [req, res, next] = argForMiddleware();
-    req.get = validToken;
-    checkAuthTokenMiddleware(req, res, next);
-    done();
-  } catch (err) {
-    done(err);
-  }
+it("Check auth middleware with valid token", async () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const [req, res, next] = argForMiddleware();
+      req.get = validToken;
+      await checkAuthTokenMiddleware(req, res, next);
+      if (req.user._id) resolve();
+    } catch (err) {
+      reject(err);
+    }
+  });
 });
 
 const invalidToken = () =>
   "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNzRlYmQ5MGMwOGIzMzU5ODlkNzVjOCIsImlhdCI6MTYwMTY1NDAyMH0.bSaMyhIWYzjnx8aVIIDh8QwGLxY-UhmR4pjUT_nmanG";
 
-it("Check auth middleware with invalid token", async (done) => {
-  // checkAuthTokenMiddleware(req, res, next).then(() => {
-  //   if (res.params.status === 401) return done();
-  //   done(new Error("No message exists"));
-  // });
-  try {
-    const [req, res, next] = argForMiddleware();
-    req.get = invalidToken;
-    await checkAuthTokenMiddleware(req, res, next);
-    console.log("res: ", res.params);
-    if (res.params.status === 401) return done();
-  } catch (err) {
-    done(err);
-  }
+it("Check auth middleware with invalid token", async () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const [req, res, next] = argForMiddleware();
+      req.get = invalidToken;
+      await checkAuthTokenMiddleware(req, res, next);
+      if (res.params.status === 401) resolve();
+    } catch (err) {
+      reject(err);
+    }
+  });
 });
 
 const nonToken = () => "";
 
-it("Check auth middleware without token", (done) => {
-  const [req, res, next] = argForMiddleware();
-  req.get = nonToken;
-
-  checkAuthTokenMiddleware(req, res, next).then(() => {
-    if (res.params.status === 401) return done();
-    done(new Error("No message exists"));
+it("Check auth middleware without token", async () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const [req, res, next] = argForMiddleware();
+      req.get = nonToken;
+      await checkAuthTokenMiddleware(req, res, next);
+      if (res.params.status === 401) resolve();
+    } catch (err) {
+      reject(err);
+    }
   });
 });
 
