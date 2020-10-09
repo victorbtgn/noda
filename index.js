@@ -13,12 +13,14 @@ const mongoose = require("mongoose");
 const authRouter = require("./api/auth/auth.router");
 const contactsRouter = require("./api/contacts/contacts.router");
 
+let app;
+
 const runServer = async () => {
   try {
     await mongoose.connect(process.env.DB_URI, { useUnifiedTopology: true, useNewUrlParser: true });
     console.log("Database connection successful");
 
-    const app = express();
+    app = express();
     app.use(morgan("dev"));
     app.use(cors());
     app.use(express.json());
@@ -53,3 +55,5 @@ const runServer = async () => {
 };
 
 runServer();
+
+module.exports = app
