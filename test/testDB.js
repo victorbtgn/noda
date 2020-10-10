@@ -4,13 +4,10 @@ const { connect } = require("mongoose");
 const sinon = require("sinon");
 const { mockReq, mockRes } = require("sinon-express-mock");
 const request = require("supertest");
-const should = require('should');
 const authRouter = require("../api/auth/auth.router");
 
 
 const { checkAuthTokenMiddleware } = require("../middlewares/auth.middleware");
-const { avatarUploaderMiddleware } = require('../middlewares/fileUploader.middleware');
-const { uploadAvatarController } = require('../api/auth/auth.controller');
 
 describe('Connection mongo', () => {
   it("Connection mongo test with valid URI", (done) => {
