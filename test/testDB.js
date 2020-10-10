@@ -43,91 +43,28 @@ describe('Unit test for auth middleware', () => {
     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNzRiNTE1ZTQ4ODRkMmM1NDcwMzA3NyIsImlhdCI6MTYwMTQ4NDEyOX0.YK-fzBeDVHckGo7NzuQTRxD1_9A2qjBViZqzabGqTlk";
   
   it("Check auth middleware with valid token", async () => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const [req, res, next] = argForMiddleware();
-        req.get = validToken;
-        await checkAuthTokenMiddleware(req, res, next);
-        if (req.user._id) resolve();
-      } catch (err) {
-        reject(err);
-      }
-    });
+      const [req, res, next] = argForMiddleware();
+      req.get = validToken;
+      await checkAuthTokenMiddleware(req, res, next);
+      if(res.params.status) throw new Error('Some error');
   });
-  
+
   const invalidToken = () =>
     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNzRlYmQ5MGMwOGIzMzU5ODlkNzVjOCIsImlhdCI6MTYwMTY1NDAyMH0.bSaMyhIWYzjnx8aVIIDh8QwGLxY-UhmR4pjUT_nmanG";
-  
+
   it("Check auth middleware with invalid token", async () => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const [req, res, next] = argForMiddleware();
-        req.get = invalidToken;
-        await checkAuthTokenMiddleware(req, res, next);
-        if (res.params.status === 401) resolve();
-      } catch (err) {
-        reject(err);
-      }
-    });
+    const [req, res, next] = argForMiddleware();
+    req.get = invalidToken;
+    await checkAuthTokenMiddleware(req, res, next);
+    if(res.params.status !== 401) throw new Error('Some error');
   });
   
   const nonToken = () => "";
   
   it("Check auth middleware without token", async () => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const [req, res, next] = argForMiddleware();
-        req.get = nonToken;
-        await checkAuthTokenMiddleware(req, res, next);
-        if (res.params.status === 401) resolve();
-      } catch (err) {
-        reject(err);
-      }
-    });
+    const [req, res, next] = argForMiddleware();
+    req.get = nonToken;
+    await checkAuthTokenMiddleware(req, res, next);
+    if(res.params.status !== 401) throw new Error('Some error');
   });
 })
-
-describe('Check POST upload avatar', function () {
-  const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmN2Y0MTkxNWVmZDgxMjE0YzRlNjk5YyIsImlhdCI6MTYwMjE3NTQxOH0.9Dz4kOJ6hLT8R8gQGhNEfvSk52B_AQhajO1-q9G5W38';
-  const app = express();
-  app.use(express.urlencoded({ extended: false }))
-  app.use("/auth", authRouter);
-
-  it('Check middleware with invalid token',  (done) => {
-    request(app)
-      .get('/current')
-      .set('Authorization', token)
-      .expect(200, done)
-      // .end((err, res) => {
-      //   console.log('ERR: ', err);
-      //   res.status.should.equal(200)
-      //   done()
-      // })
-
-    // request(app)
-    //   .post('/users/avatars')
-    //   .set('Authorization', token)
-    //   .expect(401)
-    //   .end((err, res) => {
-    //     console.log('ERR: ', err);
-    //     res.status.should.equal(401)
-    //     done()
-    //   })
-      
-      //   return new Promise(async (resolve, reject) => {
-  //     try {
-  //       await request(app)
-  //     .post('/auth/users/avatars')
-  //     .set('Accept', 'application/json')
-  //     .set('Authorization', 'Bearer ' + token)
-  //     .expect((res) => {
-  //       console.log(res);
-  //     })
-  //     .expect(401, resolve())
-  //     } catch (err) {
-  //       reject(err)
-  //     }
-  //   });
-  // });
-  });
-});
