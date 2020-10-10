@@ -1,11 +1,12 @@
 require("dotenv").config();
+const express = require("express");
 const { connect } = require("mongoose");
 const sinon = require("sinon");
 const { mockReq, mockRes } = require("sinon-express-mock");
 const request = require("supertest");
+const should = require('should');
 const authRouter = require("../api/auth/auth.router");
 
-const app = require('../index')
 
 const { checkAuthTokenMiddleware } = require("../middlewares/auth.middleware");
 const { avatarUploaderMiddleware } = require('../middlewares/fileUploader.middleware');
@@ -86,30 +87,47 @@ describe('Unit test for auth middleware', () => {
   });
 })
 
-// describe('Check POST upload avatar', function () {
-//   const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNzRiNTE1ZTQ4ODRkMmM1NDcwMzA3NyIsImlhdCI6MTYwMTQ4NDEyOX0.YK-fzBeDVHckGo7NzuQTRxD1_9A2qjBViZqzabGqTlk';
+describe('Check POST upload avatar', function () {
+  const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmN2Y0MTkxNWVmZDgxMjE0YzRlNjk5YyIsImlhdCI6MTYwMjE3NTQxOH0.9Dz4kOJ6hLT8R8gQGhNEfvSk52B_AQhajO1-q9G5W38';
+  const app = express();
+  app.use(express.urlencoded({ extended: false }))
+  app.use("/auth", authRouter);
 
-//   it('Check middleware with invalid token',  (done) => {
-//     request(app)
-//       .post('/auth/users/avatars')
-//       .set('Accept', 'application/json')
-//       .set('Authorization', token)
-//       .expect(401, done)
+  it('Check middleware with invalid token',  (done) => {
+    request(app)
+      .get('/current')
+      .set('Authorization', token)
+      .expect(200, done)
+      // .end((err, res) => {
+      //   console.log('ERR: ', err);
+      //   res.status.should.equal(200)
+      //   done()
+      // })
+
+    // request(app)
+    //   .post('/users/avatars')
+    //   .set('Authorization', token)
+    //   .expect(401)
+    //   .end((err, res) => {
+    //     console.log('ERR: ', err);
+    //     res.status.should.equal(401)
+    //     done()
+    //   })
       
-//       //   return new Promise(async (resolve, reject) => {
-//   //     try {
-//   //       await request(app)
-//   //     .post('/auth/users/avatars')
-//   //     .set('Accept', 'application/json')
-//   //     .set('Authorization', 'Bearer ' + token)
-//   //     .expect((res) => {
-//   //       console.log(res);
-//   //     })
-//   //     .expect(401, resolve())
-//   //     } catch (err) {
-//   //       reject(err)
-//   //     }
-//   //   });
-//   // });
-//   });
-// });
+      //   return new Promise(async (resolve, reject) => {
+  //     try {
+  //       await request(app)
+  //     .post('/auth/users/avatars')
+  //     .set('Accept', 'application/json')
+  //     .set('Authorization', 'Bearer ' + token)
+  //     .expect((res) => {
+  //       console.log(res);
+  //     })
+  //     .expect(401, resolve())
+  //     } catch (err) {
+  //       reject(err)
+  //     }
+  //   });
+  // });
+  });
+});

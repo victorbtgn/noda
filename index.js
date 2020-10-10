@@ -13,14 +13,12 @@ const mongoose = require("mongoose");
 const authRouter = require("./api/auth/auth.router");
 const contactsRouter = require("./api/contacts/contacts.router");
 
-let app;
-
 const runServer = async () => {
   try {
     await mongoose.connect(process.env.DB_URI, { useUnifiedTopology: true, useNewUrlParser: true });
     console.log("Database connection successful");
 
-    app = express();
+    const app = express();
     app.use(morgan("dev"));
     app.use(cors());
     app.use(express.json());
@@ -48,12 +46,9 @@ const runServer = async () => {
 
     app.listen(PORT, () => console.log(`Server started on port: ${PORT}`));
   } catch (error) {
-    //  Send this error on some new logs file? or error.logs.js
     console.log("Database connection error(");
     process.exit(1);
   }
 };
 
 runServer();
-
-module.exports = app
