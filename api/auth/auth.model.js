@@ -4,23 +4,15 @@ const userSchema = new Schema({
   email: {
     type: String,
     unique: true,
-    required: true,
-    validate: (value) => value.includes("@"),
   },
-  password: {
-    type: String,
-    required: true,
-    min: 8,
-  },
+  password: String,
   subscription: {
     type: String,
     enum: ["free", "pro", "premium"],
     default: "free",
   },
-  token: {
-    type: String,
-    default: "",
-  },
+  token: String,
+  avatarURL: String,
 });
 
 let db = model("user", userSchema);
@@ -38,7 +30,7 @@ async function findUserById(id) {
 }
 
 async function findUserAndUpdate(query, update) {
-  return await db.findOneAndUpdate(query, update);
+  return await db.findOneAndUpdate(query, update, { new: true, runValidators: true });
 }
 
 module.exports = { registerUser, findUser, findUserById, findUserAndUpdate };
