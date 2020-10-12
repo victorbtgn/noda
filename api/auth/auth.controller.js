@@ -4,7 +4,7 @@ const fs = require("fs").promises;
 const { createVerifyToken } = require("../../services/token.service");
 const { createDefaultAvatar, minifyAvatar } = require("../../services/createDefaultAvatar.service");
 const { v4: uuidv4 } = require('uuid');
-const { imagesStore } = require("../../config");
+const { imagesStore, loginURL } = require("../../config");
 const { sendEmail } = require("../../services/mail.service");
 
 const getCurrentUserController = async (req, res, next) => {
@@ -143,7 +143,7 @@ const verifyUserController = async (req, res, next) => {
     const user = await User.findUser({ verificationToken: req.params.verificationToken });
     if(!user) return res.status(404).json({message: "user not found"});
     await User.findUserAndUpdate({ verificationToken: user.verificationToken }, { $unset: { verificationToken: '' } })
-    res.status(200).end()
+    res.status(200).redirect(loginURL)
   } catch (error) {
     next(error)
   }

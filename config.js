@@ -12,4 +12,6 @@ const temporaryDirectory = () => "./tmp/";
 
 const staticAvatarURL = (path) => `${process.env.DOMAIN}/images/${path}`;
 
-module.exports = { imagesStore, checkImageFormat, temporaryDirectory, staticAvatarURL };
+const loginURL = () => `${process.env.DOMAIN}/auth/login`;
+
+module.exports = { imagesStore, checkImageFormat, temporaryDirectory, staticAvatarURL, loginURL };
