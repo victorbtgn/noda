@@ -13,6 +13,7 @@ const userSchema = new Schema({
   },
   token: String,
   avatarURL: String,
+  verificationToken: String,
 });
 
 let db = model("user", userSchema);

@@ -3,8 +3,9 @@ const bcrypt = require("bcrypt");
 const fs = require("fs").promises;
 const { createVerifyToken } = require("../../services/token.service");
 const { createDefaultAvatar, minifyAvatar } = require("../../services/createDefaultAvatar.service");
-
+const { v4: uuidv4 } = require('uuid');
 const { imagesStore } = require("../../config");
+const { sendEmail } = require("../../services/mail.service");
 
 const getCurrentUserController = async (req, res, next) => {
   try {
@@ -39,11 +40,13 @@ const updateUserController = async (req, res, next) => {
 const registerUserController = async (req, res, next) => {
   try {
     const { body } = req;
+    const verificationToken = uuidv4();
     const hashedPassword = await bcrypt.hash(body.password, +process.env.SALT);
 
     const user = await User.registerUser({
       ...body,
       password: hashedPassword,
+      verificationToken,
     });
 
     if (!user) return res.status(404).json({ message: "user not found" });
@@ -52,8 +55,11 @@ const registerUserController = async (req, res, next) => {
 
     const updateUser = await User.findUserAndUpdate({ email: body.email }, { avatarURL });
 
+    await sendEmail(body.email, verificationToken);
+
     res.status(201).json({
       user: {
+        id: updateUser._id,
         email: updateUser.email,
         subscription: updateUser.subscription,
         avatarURL: updateUser.avatarURL,
@@ -76,6 +82,9 @@ const loginUserController = async (req, res, next) => {
       console.log("user not found");
       res.status(401).json({ message: "Email or password is wrong" });
       return;
+    }
+    if(user.verificationToken) {
+      return res.status(401).json({ message: "verify your email" })
     }
     const isPasswordsEqual = await bcrypt.compare(body.password, user.password);
     if (!isPasswordsEqual) {
@@ -129,6 +138,17 @@ const uploadAvatarController = async (req, res, next) => {
   }
 };
 
+const verifyUserController = async (req, res, next) => {
+  try {
+    const user = await User.findUser({ verificationToken: req.params.verificationToken });
+    if(!user) return res.status(404).json({message: "user not found"});
+    await User.findUserAndUpdate({ verificationToken: user.verificationToken }, { $unset: { verificationToken: '' } })
+    res.status(200).end()
+  } catch (error) {
+    next(error)
+  }
+}
+
 module.exports = {
   getCurrentUserController,
   updateUserController,
@@ -136,4 +156,5 @@ module.exports = {
   loginUserController,
   logoutUserController,
   uploadAvatarController,
+  verifyUserController,
 };
