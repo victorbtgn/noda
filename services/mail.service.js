@@ -11,8 +11,9 @@ const msg = (email, verificationToken) => ({
 
 const sendEmail = async (email, verificationToken) => {
     try {
-      const [response] = await sgMail.send(msg(email, verificationToken));
-      console.log("RES: ", response);
+    //   const [response] = await sgMail.send(msg(email, verificationToken));
+    //   console.log(response);
+    await sgMail.send(msg(email, verificationToken));
     } catch (error) {
         throw error
     }
