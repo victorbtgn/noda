@@ -1,10 +1,15 @@
 {
     "cSpell.ignoreWords": [
+        "api",
         "byadmin",
         "exampletoken",
+        "key",
         "mongodb",
         "noda",
-        "uploader"
+        "sendgrid",
+        "sendgrid api key",
+        "uploader",
+        "uuidv"
     ],
     "debug.javascript.warnOnLongPrediction": false,
     "cSpell.words": [

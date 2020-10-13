@@ -10,6 +10,8 @@ const checkImageFormat = (format) => {
 
 const temporaryDirectory = () => "./tmp/";
 
-const staticAvatarURL = (path) => `http://localhost:8000/images/${path}`;
+const staticAvatarURL = (path) => `${process.env.DOMAIN}/images/${path}`;
 
-module.exports = { imagesStore, checkImageFormat, temporaryDirectory, staticAvatarURL };
+const loginURL = () => `${process.env.DOMAIN}/auth/login`;
+
+module.exports = { imagesStore, checkImageFormat, temporaryDirectory, staticAvatarURL, loginURL };
